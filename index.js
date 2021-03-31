@@ -67,7 +67,7 @@ client.on('message', function(message){
 
       req = run[lang_lower](code)
       
-      if (typeof req.program_error === 'undefined') {
+      if (!req.program_error && !req.compiler_error) {
         if (code != '') {
           embed.addField('Output', '```\n' + req.program_output + '```')
         } else {
@@ -76,7 +76,12 @@ client.on('message', function(message){
 
         embed.setColor('#4aff5c')
       } else {
-        embed.addField('Output', '```\n' + req.program_error + '```')
+        if (!req.compiler_error) {
+          embed.addField('Output', '```\n' + req.program_error + '```')
+        } else {
+          embed.addField('Output', '```\n' + req.compiler_error + '```')
+        }
+
         embed.setColor('#ff2b4f')
       }
 
