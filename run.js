@@ -1,6 +1,6 @@
 const f = require('sync-fetch')
 
-const langs = ['python', 'c++', 'c', 'java', 'js', 'ruby', 'rust', 'lua', 'go', 'csharp', 'haskell', 'ts', 'swift']
+const langs = ['python', 'cpp', 'c', 'java', 'js', 'ruby', 'rust', 'lua', 'go', 'csharp', 'haskell', 'ts', 'swift', 'perl', 'coffescript']
 
 function python(code) {
   const res = f('https://wandbox.org/api/compile.json', {
@@ -98,10 +98,27 @@ function swift(code) {
   return res
 }
 
+function perl(code) {
+  const res = f('https://wandbox.org/api/compile.json', {
+    method: 'POST',
+    body: JSON.stringify({code: code, save: true, compiler: "perl-head"})}).json();
+  
+  return res
+}
+
+function coffeescript(code) {
+  const res = f('https://wandbox.org/api/compile.json', {
+    method: 'POST',
+    body: JSON.stringify({code: code, save: true, compiler: "coffeescript-head"})}).json();
+  
+  return res
+}
+
 module.exports = {
   langs: langs,
   python: python,
-  cpp_c: cpp_c,
+  cpp: cpp_c,
+  c: cpp_c,
   ruby: ruby,
   rust: rust,
   go: go,
@@ -111,5 +128,7 @@ module.exports = {
   csharp: csharp,
   lua: lua,
   ts: ts,
-  swift: swift
+  swift: swift,
+  perl: perl,
+  coffeescript: coffeescript
 }
