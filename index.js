@@ -116,7 +116,9 @@ client.on('message', function(message){
       message.channel.send('Invalid language. Please do `.langs` for all the langauges.')
     }
   } else {
-    message.channel.send('Invalid command.')
+    if (message.author != client.user && message.content.startsWith(config.prefix)) {
+      message.channel.send('Invalid command.')
+    }
   }
 })
 
