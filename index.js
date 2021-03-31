@@ -106,11 +106,17 @@ client.on('message', function(message){
       }
 
       embed.addField('URL', req.url)
+      
+      if (embed.length > 2000) {
+        embed.fields[0].value = 'Program output is too long, please use permlink instead.'
+      }
 
       message.channel.send(embed)
     } else {
       message.channel.send('Invalid language. Please do `.langs` for all the langauges.')
     }
+  } else {
+    message.channel.send('Invalid command.')
   }
 })
 
