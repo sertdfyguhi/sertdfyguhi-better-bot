@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "sync-fetch": "^0.3.0"
+  }
+}
