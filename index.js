@@ -85,7 +85,7 @@ client.on('message', function(message){
         embed.setColor('#ff2b4f')
       }
 
-      embed.addField('URL', req.url)
+      embed.addField('permlink', req.url)
       
       if (embed.length > 2000) {
         embed.fields[0].value = 'Program output is too long, please use permlink instead.'
