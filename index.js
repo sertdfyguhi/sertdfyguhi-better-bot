@@ -50,6 +50,10 @@ client.on('message', function(message){
 
     let req;
 
+    if (code.startsWith('\n')) {
+      code = code.substring(1)
+    }
+
     if (code.startsWith('```') && code.endsWith('```')) {
       const s = code.split('\n')
       s.pop()
@@ -59,38 +63,9 @@ client.on('message', function(message){
     }
 
     if (run.langs.includes(split[1].toLowerCase())) {
-      switch (split[1].toLowerCase()) {
-        case 'python':
-          req = run.python(code)
-          break
-        case 'js':
-          req = run.js(code)
-          break
-        case 'ruby':
-          req = run.ruby(code)
-          break
-        case 'haskell':
-          req = run.haskell(code)
-          break
-        case 'go':
-          req = run.go(code)
-          break
-        case 'c++' || 'c':
-          req = run.cpp_c(code)
-          break
-        case 'rust':
-          req = run.rust(code)
-          break
-        case 'java':
-          req = run.java(code)
-          break
-        case 'lua':
-          req = run.lua(code)
-          break
-        case 'csharp':
-          req = run.csharp(code)
-          break
-      }
+      const lang_lower = split[1].toLowerCase()
+
+      req = run[lang_lower](code)
       
       if (typeof req.program_error === 'undefined') {
         if (code != '') {
@@ -122,4 +97,4 @@ client.on('message', function(message){
   }
 })
 
-client.login(process.env.token)
+client.login(config.token)

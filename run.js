@@ -1,6 +1,6 @@
 const f = require('sync-fetch')
 
-const langs = ['python', 'c++', 'c', 'java', 'js', 'ruby', 'rust', 'lua', 'go', 'csharp', 'haskell']
+const langs = ['python', 'c++', 'c', 'java', 'js', 'ruby', 'rust', 'lua', 'go', 'csharp', 'haskell', 'ts', 'swift']
 
 function python(code) {
   const res = f('https://wandbox.org/api/compile.json', {
@@ -82,6 +82,22 @@ function ruby(code) {
   return res
 }
 
+function ts(code) {
+  const res = f('https://wandbox.org/api/compile.json', {
+    method: 'POST',
+    body: JSON.stringify({code: code, save: true, compiler: "typescript-3.9.5"})}).json();
+  
+  return res
+}
+
+function swift(code) {
+  const res = f('https://wandbox.org/api/compile.json', {
+    method: 'POST',
+    body: JSON.stringify({code: code, save: true, compiler: "swift-head"})}).json();
+  
+  return res
+}
+
 module.exports = {
   langs: langs,
   python: python,
@@ -93,5 +109,7 @@ module.exports = {
   java: java,
   haskell: haskell,
   csharp: csharp,
-  lua: lua
+  lua: lua,
+  ts: ts,
+  swift: swift
 }
