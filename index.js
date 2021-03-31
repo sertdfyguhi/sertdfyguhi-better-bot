@@ -59,7 +59,7 @@ client.on('message', function(message){
       s.pop()
       s.shift()
 
-      code = s.join('')
+      code = s.join('\n')
     }
 
     if (run.langs.includes(split[1].toLowerCase())) {
