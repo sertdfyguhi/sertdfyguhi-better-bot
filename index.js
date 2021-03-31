@@ -46,7 +46,7 @@ client.on('message', function(message){
     let code = message.content.substr(split[0].length + 2 + split[1].length)
     let embed = new discord.MessageEmbed()
       .setTitle('sertdfyguhi\'s code bot')
-      .setFooter('Requested by @' + message.author.username)
+      .setFooter('Requested by @' + message.author.tag)
 
     let req;
 
