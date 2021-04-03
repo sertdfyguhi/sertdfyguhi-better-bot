@@ -64,7 +64,7 @@ client.on('message', function (message) {
       s.pop()
 
       s[s.length - 1] = s[s.length - 1].substring(
-        s[s.length - 1].indexOf('```')
+        s[s.length - 1].indexOf('```') + 1
       )
 
       code = s.join('\n')
