@@ -61,12 +61,17 @@ client.on('message', function (message) {
     if (code.startsWith('```') && code.endsWith('```')) {
       const s = code.split('\n')
       s.shift()
-      s.pop()
 
-      s[s.length - 1] = s[s.length - 1].substring(
-        s[s.length - 1].indexOf('```') + 1
+      if (!s[s.length - 1].endsWith('```')) {
+        s.pop()
+      }
+
+      s[s.length - 1] = s[s.length - 1].substr(
+        0,
+        s[s.length - 1].indexOf('```')
       )
 
+      console.log(s)
       code = s.join('\n')
     }
 
