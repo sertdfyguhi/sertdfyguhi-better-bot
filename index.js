@@ -10,7 +10,7 @@ const client = new discord.Client()
 
 client.on('ready', function () {
   console.log('logged in')
-  client.user.setActivity('hey guys do s!help for help')
+  client.user.setActivity('do s!help for help')
 })
 
 client.on('message', function (message) {
@@ -60,6 +60,7 @@ client.on('message', function (message) {
 
     if (code.startsWith('```') && code.endsWith('```')) {
       const s = code.split('\n')
+      s.shift()
       s.pop()
 
       s[s.length - 1] = s[s.length - 1].substring(
