@@ -47,7 +47,18 @@ client.on('message', function (message) {
   } else if (message.content.startsWith(`${config.prefix}code`)) {
     // code command
 
-    const split = message.content.split(' ')
+    let split = message.content.split(' ')
+
+    let lang_lower = split[1].toLowerCase()
+
+    if (lang_lower.includes('\n')) {
+      split.splice(2, 0, lang_lower.substring(lang_lower.indexOf('\n') + 1))
+      split[1] = split[1].replace(
+        lang_lower.substring(lang_lower.indexOf('\n') - 1),
+        ''
+      )
+      lang_lower = lang_lower.substr(0, lang_lower.indexOf('\n'))
+    }
 
     let code = message.content.substr(split[0].length + split[1].length + 2)
     let embed = new discord.MessageEmbed()
@@ -71,22 +82,22 @@ client.on('message', function (message) {
         s[s.length - 1].indexOf('```')
       )
 
-      console.log(s)
       code = s.join('\n')
     }
 
-    const lang_lower = split[1].toLowerCase()
-
-    if (run.langs.includes(lang_lower)) {
+    if (run.langs.includes(lang_lower) && code != '') {
       let res
 
       res = run[lang_lower](code)
 
       if (!res.program_error && !res.compiler_error) {
-        if (code != '') {
+        try {
           embed.addField('Output', '```\n' + res.program_output + '```')
-        } else {
-          embed.addField('Output', '``` ```')
+        } catch (e) {
+          embed.addField(
+            'Output',
+            'Program output is too long, please use permlink instead.'
+          )
         }
 
         embed.setColor('#4aff5c')
@@ -109,6 +120,9 @@ client.on('message', function (message) {
 
       message.channel.send(embed)
     } else {
+      if (code == '') {
+        message.channel.send('No code to run.')
+      }
       message.channel.send(
         'Invalid language. Please do `.langs` for all the langauges.'
       )
