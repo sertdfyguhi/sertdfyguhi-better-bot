@@ -14,10 +14,11 @@ client.on('ready', function () {
 })
 
 client.on('message', function (message) {
+  console.log(message.content)
   if (
-      message.content === `${config.prefix}help` ||
-      message.content === "@sertdfyguhi's code bot help"
-    ) {
+    message.content === `${config.prefix}help` ||
+    message.content === "<@&826454680510267463> help"
+  ) {
     // help command
 
     const embed = new discord.MessageEmbed()
@@ -32,9 +33,9 @@ client.on('message', function (message) {
 
     message.channel.send(embed)
   } else if (
-      message.content === `${config.prefix}langs` ||
-      message.content === "@sertdfyguhi's code bot langs"
-    ) {
+    message.content === `${config.prefix}langs` ||
+    message.content === "<@&826454680510267463> langs"
+  ) {
     // langs command
 
     let langs = ''
@@ -51,17 +52,15 @@ client.on('message', function (message) {
 
     message.channel.send(embed)
   } else if (
-      message.content.startsWith(`${config.prefix}code`) ||
-      message.content.startsWith("@sertdfyguhi's code bot code")
-    ) {
+    message.content.startsWith(`${config.prefix}code`) ||
+    message.content.startsWith("<@&826454680510267463> code")
+  ) {
     // code command
 
     let split = message.content.split(' ')
 
-    if (message.content.startsWith("@sertdfyguhi's code bot")) {
-      for (let i = 0; i < 3; i++) {
-        splt.shift()
-      }
+    if (message.content.startsWith("<@&826454680510267463>")) {
+      split.shift()
     }
 
     let lang_lower = split[1].toLowerCase()
@@ -75,7 +74,12 @@ client.on('message', function (message) {
       lang_lower = lang_lower.substr(0, lang_lower.indexOf('\n'))
     }
 
-    let code = message.content.substr(split[0].length + split[1].length + 2)
+    let code;
+    if (message.content.startsWith("<@&826454680510267463>")) {
+      code = message.content.substr(split[0].length + split[1].length + 22 + 3)
+    } else {
+      code = message.content.substr(split[0].length + split[1].length + 2)
+    }
     let embed = new discord.MessageEmbed()
       .setTitle("sertdfyguhi's code bot")
       .setFooter('Requested by @' + message.author.username)
@@ -144,7 +148,7 @@ client.on('message', function (message) {
     }
   } else {
     if (
-      message.content.startsWith("@sertdfyguhi's code bot") ||
+      message.content.startsWith("<@&826454680510267463>") ||
       message.content.startsWith(config.prefix)
     ) {
       message.channel.send('Invalid command.')
