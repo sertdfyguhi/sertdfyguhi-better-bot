@@ -14,7 +14,10 @@ client.on('ready', function () {
 })
 
 client.on('message', function (message) {
-  if (message.content === `${config.prefix}help`) {
+  if (
+      message.content === `${config.prefix}help` ||
+      message.content === "@sertdfyguhi's code bot help"
+    ) {
     // help command
 
     const embed = new discord.MessageEmbed()
@@ -28,7 +31,10 @@ client.on('message', function (message) {
       .setFooter('made by sertdfyguhi#5971')
 
     message.channel.send(embed)
-  } else if (message.content === `${config.prefix}langs`) {
+  } else if (
+      message.content === `${config.prefix}langs` ||
+      message.content === "@sertdfyguhi's code bot langs"
+    ) {
     // langs command
 
     let langs = ''
@@ -44,10 +50,19 @@ client.on('message', function (message) {
       .setFooter('made by sertdfyguhi#5971')
 
     message.channel.send(embed)
-  } else if (message.content.startsWith(`${config.prefix}code`)) {
+  } else if (
+      message.content.startsWith(`${config.prefix}code`) ||
+      message.content.startsWith("@sertdfyguhi's code bot code")
+    ) {
     // code command
 
     let split = message.content.split(' ')
+
+    if (message.content.startsWith("@sertdfyguhi's code bot")) {
+      for (let i = 0; i < 3; i++) {
+        splt.shift()
+      }
+    }
 
     let lang_lower = split[1].toLowerCase()
 
@@ -129,7 +144,7 @@ client.on('message', function (message) {
     }
   } else {
     if (
-      message.author != client.user &&
+      message.content.startsWith("@sertdfyguhi's code bot") ||
       message.content.startsWith(config.prefix)
     ) {
       message.channel.send('Invalid command.')
