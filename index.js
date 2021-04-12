@@ -3,21 +3,26 @@
 
 const discord = require('discord.js')
 
-const config = require('./config.json')
+const prefix = 's!'
+// const token = require('./token.json')
 const run = require('./run.js')
 
 const client = new discord.Client()
 
+let mention;
+
 client.on('ready', function () {
   console.log('logged in')
+
+  mention  = '<@!' + client.user.id + '>'
+
   client.user.setActivity('do s!help for help')
 })
 
 client.on('message', function (message) {
-  console.log(message.content)
   if (
-    message.content === `${config.prefix}help` ||
-    message.content === "<@&826454680510267463> help"
+    message.content === `${prefix}help` ||
+    message.content === `${mention} help`
   ) {
     // help command
 
@@ -33,8 +38,8 @@ client.on('message', function (message) {
 
     message.channel.send(embed)
   } else if (
-    message.content === `${config.prefix}langs` ||
-    message.content === "<@&826454680510267463> langs"
+    message.content === `${prefix}langs` ||
+    message.content === `${mention} langs`
   ) {
     // langs command
 
@@ -52,14 +57,14 @@ client.on('message', function (message) {
 
     message.channel.send(embed)
   } else if (
-    message.content.startsWith(`${config.prefix}code`) ||
-    message.content.startsWith("<@&826454680510267463> code")
+    message.content.startsWith(`${prefix}code`) ||
+    message.content.startsWith(`${mention} code`)
   ) {
     // code command
 
     let split = message.content.split(' ')
 
-    if (message.content.startsWith("<@&826454680510267463>")) {
+    if (message.content.startsWith(mention)) {
       split.shift()
     }
 
@@ -75,7 +80,7 @@ client.on('message', function (message) {
     }
 
     let code;
-    if (message.content.startsWith("<@&826454680510267463>")) {
+    if (message.content.startsWith(mention)) {
       code = message.content.substr(split[0].length + split[1].length + 22 + 3)
     } else {
       code = message.content.substr(split[0].length + split[1].length + 2)
@@ -148,8 +153,7 @@ client.on('message', function (message) {
     }
   } else {
     if (
-      message.content.startsWith("<@&826454680510267463>") ||
-      message.content.startsWith(config.prefix)
+      message.content.startsWith(prefix)
     ) {
       message.channel.send('Invalid command.')
     }
@@ -157,3 +161,4 @@ client.on('message', function (message) {
 })
 
 client.login(process.env.token)
+// client.login(token.token)
