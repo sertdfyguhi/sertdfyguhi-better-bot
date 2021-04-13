@@ -133,7 +133,7 @@ client.on('message', function (message) {
 
       embed
         .addField('Stars', info.stargazers_count, true)
-        .addField('Watchers', info.watchers_count, true)
+        .addField('Watchers', info.subscribers, true)
         .addField('Open issues', info.open_issues_count, true)
         .addField('Forks', info.forks, true)
         .addField('Created on', info.created_at, true)
