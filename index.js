@@ -4,9 +4,9 @@
 const discord = require('discord.js')
 
 const prefix = 's!'
-// const token = require('./token.json')
-const run = require('./run.js')
-const github = require('./github.js')
+const run = require('./run')
+const github = require('./github')
+const keepalive = require('./keepalive')
 
 const client = new discord.Client()
 
@@ -147,14 +147,18 @@ client.on('message', function (message) {
     message.content.startsWith(`${mention} code`)
   ) {
     // code command
-
     let split = message.content.split(' ')
 
     if (message.content.startsWith(mention)) {
       split.shift()
     }
 
-    let lang_lower = split[1].toLowerCase()
+    try {
+      let lang_lower = split[1].toLowerCase()
+    } catch (e) {
+      message.channel.send('nothing provided')
+      return
+    }
 
     if (lang_lower.includes('\n')) {
       split.splice(2, 0, lang_lower.substring(lang_lower.indexOf('\n') + 1))
@@ -246,5 +250,4 @@ client.on('message', function (message) {
   }
 })
 
-client.login(process.env.token)
-// client.login(token.token)
+keepalive(client)
