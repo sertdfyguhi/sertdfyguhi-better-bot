@@ -1,36 +1,71 @@
-// todo:
-// nothing
-
 const discord = require('discord.js')
 
 const prefix = 's!'
+const json_rep = require('./json')
 const run = require('./run')
 const github = require('./github')
 const keepalive = require('./keepalive')
 
 const client = new discord.Client()
 
-let mention;
-
 client.on('ready', function () {
   console.log('logged in')
-
-  mention  = '<@!' + client.user.id + '>'
 
   client.user.setActivity('do s!help for help')
 })
 
-client.on('message', function (message) {
-  if (
-    message.content === `${prefix}help` ||
-    message.content === `${mention} help`
-  ) {
+client.on('message', function (msg) {
+  if (msg.content.startsWith(`${prefix}json`)) {
+    // json and jsons command
+    if (msg.content.startsWith(`${prefix}jsons`))  {
+      if (msg.content == `${prefix}jsons` ||
+          msg.content == `${prefix}jsons `) {
+        msg.channel.send('no json provided')
+        return
+      }
+      let content = msg.content.substr(8)
+      if (content.startsWith('`')) {
+        if (content.startsWith('```')) {
+          content = content.substr(content.indexOf('\n') + 1)
+          content = content.substring(0, content.length - 4)
+        } else {
+          content = content.slice(1, -1)
+        }
+      }
+
+      try {
+        for (const json of JSON.parse(content)) {
+          msg.channel.send(json_rep(JSON.stringify(json)))
+        }
+      } catch (e) {
+        msg.channel.send('error\n' + '```' + e + '```')
+        return
+      }
+    } else {
+      if (msg.content == `${prefix}json` ||
+          msg.content == `${prefix}json `) {
+        msg.channel.send('no json provided')
+        return
+      }
+
+      let content = msg.content.substr(7)
+      if (content.startsWith('`')) {
+        if (content.startsWith('```')) {
+          content = content.substr(content.indexOf('\n') + 1)
+          content = content.substring(0, content.length - 4)
+        } else {
+          content = content.slice(1, -1)
+        }
+      }
+      msg.channel.send(json_rep(content))
+    }
+  } else if (msg.content == `${prefix}help`) {
     // help command
 
     const embed = new discord.MessageEmbed()
       .setColor('#3268a8')
       .setTitle('Commands')
-      .setDescription('Prefix: `s!` or pinging me\n\n')
+      .setDescription('Prefix: `s!`')
       .addField(
         '**Commands**',
         '`s!help`: shows all commands.\n`.code {lang} {code}`: executes code.\
@@ -40,11 +75,8 @@ client.on('message', function (message) {
       )
       .setFooter('made by sertdfyguhi#5971')
 
-    message.channel.send(embed)
-  } else if (
-    message.content === `${prefix}langs` ||
-    message.content === `${mention} langs`
-  ) {
+    msg.channel.send(embed)
+  } else if (msg.content == `${prefix}langs`) {
     // langs command
 
     let langs = ''
@@ -59,26 +91,19 @@ client.on('message', function (message) {
       .setDescription(langs)
       .setFooter('made by sertdfyguhi#5971')
 
-    message.channel.send(embed)
-  } else if (
-    message.content.startsWith(`${prefix}user`) ||
-    message.content.startsWith(`${mention} user`)
-  ) {
-    let split = message.content.split(' ')
+    msg.channel.send(embed)
+  } else if (msg.content.startsWith(`${prefix}user`)) {
+    let split = msg.content.split(' ')
 
     if (!split[1] || split[1] == '') {
-      message.channel.send('No user given.')
+      msg.channel.send('No user given.')
       return null
-    }
-
-    if (message.content.startsWith(mention)) {
-      split.shift()
     }
 
     const info = github.user(split[1])
     let embed = new discord.MessageEmbed()
     if (info.message) {
-      message.channel.send('User not found.')
+      msg.channel.send('User not found.')
     } else {
       embed
         .setTitle(info.login)
@@ -97,30 +122,23 @@ client.on('message', function (message) {
         .addField('Created on', info.created_at, true)
         .addField('Updated on', info.updated_at, true)
 
-      message.channel.send(embed)
+      msg.channel.send(embed)
     }
-  } else if (
-    message.content.startsWith(`${prefix}repo`) ||
-    message.content.startsWith(`${mention} repo`)
-  ) {
-    let split = message.content.split(' ')
+  } else if (msg.content.startsWith(`${prefix}repo`)) {
+    let split = msg.content.split(' ')
 
     if (!split[1] || split[1] == '') {
-      message.channel.send('No user given.')
+      msg.channel.send('No user given.')
       return null
     } else if (!split[2]) {
-      message.channel.send('No repo name given.')
+      msg.channel.send('No repo name given.')
       return null
-    }
-
-    if (message.content.startsWith(mention)) {
-      split.shift()
     }
 
     const info = github.repo(split[1], split[2])
 
     if (info.message) {
-      message.channel.send('Repo not found.')
+      msg.channel.send('Repo not found.')
     } else {
       let embed = new discord.MessageEmbed()
         .setTitle(info.name)
@@ -140,23 +158,16 @@ client.on('message', function (message) {
         .addField('Last updated on', info.updated_at, true)
         .addField('Last commited on', info.pushed_at, true)
 
-      message.channel.send(embed)
+      msg.channel.send(embed)
     }
-  } else if (
-    message.content.startsWith(`${prefix}code`) ||
-    message.content.startsWith(`${mention} code`)
-  ) {
+  } else if (msg.content.startsWith(`${prefix}code`)) {
     // code command
-    let split = message.content.split(' ')
-
-    if (message.content.startsWith(mention)) {
-      split.shift()
-    }
+    let split = msg.content.split(' ')
 
     try {
       let lang_lower = split[1].toLowerCase()
     } catch (e) {
-      message.channel.send('nothing provided')
+      msg.channel.send('nothing provided')
       return
     }
 
@@ -169,15 +180,11 @@ client.on('message', function (message) {
       lang_lower = lang_lower.substr(0, lang_lower.indexOf('\n'))
     }
 
-    let code;
-    if (message.content.startsWith(mention)) {
-      code = message.content.substr(split[0].length + split[1].length + 22 + 3)
-    } else {
-      code = message.content.substr(split[0].length + split[1].length + 2)
-    }
+    let code = msg.content.substr(split[0].length + split[1].length + 2
+
     let embed = new discord.MessageEmbed()
       .setTitle("sertdfyguhi's code bot")
-      .setFooter('Requested by @' + message.author.username)
+      .setFooter('Requested by @' + msg.author.username)
 
     if (code.startsWith('\n')) {
       code = code.substring(1)
@@ -232,20 +239,20 @@ client.on('message', function (message) {
           'Program output is too long, please use permlink instead.'
       }
 
-      message.channel.send(embed)
+      msg.channel.send(embed)
     } else {
       if (code == '') {
-        message.channel.send('No code to run.')
+        msg.channel.send('No code to run.')
       }
-      message.channel.send(
+      msg.channel.send(
         'Invalid language. Please do `.langs` for all the langauges.'
       )
     }
   } else {
     if (
-      message.content.startsWith(prefix)
+      msg.content.startsWith(prefix)
     ) {
-      message.channel.send('Invalid command.')
+      msg.channel.send('Invalid command.')
     }
   }
 })
