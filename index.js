@@ -1,7 +1,8 @@
 const discord = require('discord.js')
+const { table } = require('table')
 
 const prefix = 's!'
-const json_rep = require('./json')
+const func = require('./functions')
 const run = require('./run')
 const github = require('./github')
 const keepalive = require('./keepalive')
@@ -9,7 +10,7 @@ const keepalive = require('./keepalive')
 const client = new discord.Client()
 
 client.on('ready', function () {
-  console.log('logged in')
+  console.log('Logged in as \u001b[33m' + client.user.tag)
 
   client.user.setActivity('do s!help for help')
 })
@@ -23,19 +24,11 @@ client.on('message', function (msg) {
         msg.channel.send('no json provided')
         return
       }
-      let content = msg.content.substr(8)
-      if (content.startsWith('`')) {
-        if (content.startsWith('```')) {
-          content = content.substr(content.indexOf('\n') + 1)
-          content = content.substring(0, content.length - 4)
-        } else {
-          content = content.slice(1, -1)
-        }
-      }
+      let content = func.remove_backticks(msg.content.substr(8))
 
       try {
         for (const json of JSON.parse(content)) {
-          msg.channel.send(json_rep(JSON.stringify(json)))
+          msg.channel.send(func.json_embed(JSON.stringify(json)))
         }
       } catch (e) {
         msg.channel.send('error\n' + '```' + e + '```')
@@ -48,16 +41,8 @@ client.on('message', function (msg) {
         return
       }
 
-      let content = msg.content.substr(7)
-      if (content.startsWith('`')) {
-        if (content.startsWith('```')) {
-          content = content.substr(content.indexOf('\n') + 1)
-          content = content.substring(0, content.length - 4)
-        } else {
-          content = content.slice(1, -1)
-        }
-      }
-      msg.channel.send(json_rep(content))
+      let content = func.remove_backticks(msg.content.substr(7))
+      msg.channel.send(func.json_embed(content))
     }
   } else if (msg.content == `${prefix}help`) {
     // help command
@@ -71,7 +56,10 @@ client.on('message', function (msg) {
         '`s!help`: shows all commands.\n`.code {lang} {code}`: executes code.\
         \n`s!langs`: all programming languages that is valid.\
         \n`s!user {github user}`: info about a github account.\
-        \n`s!repo {github user} {repo}`: info abount a github repo.'
+        \n`s!repo {github user} {repo}`: info abount a github repo.\
+        \n`s!table {array} {single line: false}: makes a string table of a array.\
+        \n`s!json {json}`: json reprensentation in embed.\
+        \n`s!jsons {array of jsons}`: json reprensentation in embed.'
       )
       .setFooter('made by sertdfyguhi#5971')
 
@@ -163,9 +151,10 @@ client.on('message', function (msg) {
   } else if (msg.content.startsWith(`${prefix}code`)) {
     // code command
     let split = msg.content.split(' ')
+    let lang_lower;
 
     try {
-      let lang_lower = split[1].toLowerCase()
+      lang_lower = split[1].toLowerCase()
     } catch (e) {
       msg.channel.send('nothing provided')
       return
@@ -180,31 +169,13 @@ client.on('message', function (msg) {
       lang_lower = lang_lower.substr(0, lang_lower.indexOf('\n'))
     }
 
-    let code = msg.content.substr(split[0].length + split[1].length + 2
+    let code = msg.content.substr(split[0].length + split[1].length + 2)
 
     let embed = new discord.MessageEmbed()
       .setTitle("sertdfyguhi's code bot")
       .setFooter('Requested by @' + msg.author.username)
 
-    if (code.startsWith('\n')) {
-      code = code.substring(1)
-    }
-
-    if (code.startsWith('```') && code.endsWith('```')) {
-      const s = code.split('\n')
-      s.shift()
-
-      if (!s[s.length - 1].endsWith('```')) {
-        s.pop()
-      }
-
-      s[s.length - 1] = s[s.length - 1].substr(
-        0,
-        s[s.length - 1].indexOf('```')
-      )
-
-      code = s.join('\n')
-    }
+    code = func.remove_backticks(code)
 
     if (run.langs.includes(lang_lower) && code != '') {
       let res
@@ -248,10 +219,27 @@ client.on('message', function (msg) {
         'Invalid language. Please do `.langs` for all the langauges.'
       )
     }
+  } else if (msg.content.startsWith(`${prefix}table`)) {
+    if (msg.content == `${prefix}table` ||
+        msg.content == `${prefix}table `) {
+      msg.channel.send('no array provided')
+      return
+    }
+    let array = func.remove_backticks(msg.content.substr(8))
+    array = array.replace(/'/g, '"')
+
+    try {
+      const split = msg.content.split(' ')
+      if (split[split.length - 1] == 'true') {
+        msg.channel.send('```' + table(JSON.parse(array), {singleLine: true}) + '```')
+      } else {
+        msg.channel.send('```' + table(JSON.parse(array)) + '```')
+      }
+    } catch (e) {
+      msg.channel.send('error\n```' + e + '```')
+    }
   } else {
-    if (
-      msg.content.startsWith(prefix)
-    ) {
+    if (msg.content.startsWith(prefix)) {
       msg.channel.send('Invalid command.')
     }
   }
