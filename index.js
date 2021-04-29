@@ -58,7 +58,6 @@ client.on('message', function (msg) {
         \n`s!langs`: all programming languages that is valid.\
         \n`s!user {github user}`: info about a github account.\
         \n`s!repo {github user} {repo}`: info abount a github repo.\
-        \n`s!table {array} {single line: false}`: makes a string table of a array.\
         \n`s!json {json}`: json reprensentation in embed.\
         \n`s!jsons {array of jsons}`: json reprensentation in embed.'
       )
