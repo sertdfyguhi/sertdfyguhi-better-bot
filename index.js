@@ -53,7 +53,8 @@ client.on('message', function (msg) {
       .setDescription('Prefix: `s!`')
       .addField(
         '**Commands**',
-        '`s!help`: shows all commands.\n`.code {lang} {code}`: executes code.\
+        '`s!help`: shows all commands.\
+        \n`s!code {lang} {code}`: executes code.\
         \n`s!langs`: all programming languages that is valid.\
         \n`s!user {github user}`: info about a github account.\
         \n`s!repo {github user} {repo}`: info abount a github repo.\
