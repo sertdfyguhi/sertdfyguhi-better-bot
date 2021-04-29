@@ -49,7 +49,7 @@ client.on('message', function (msg) {
 
     const embed = new discord.MessageEmbed()
       .setColor('#3268a8')
-      .setTitle('Commands')
+      .setTitle('Help')
       .setDescription('Prefix: `s!`')
       .addField(
         '**Commands**',
@@ -60,6 +60,10 @@ client.on('message', function (msg) {
         \n`s!table {array} {single line: false}`: makes a string table of a array.\
         \n`s!json {json}`: json reprensentation in embed.\
         \n`s!jsons {array of jsons}`: json reprensentation in embed.'
+      )
+      .addField(
+        '**Repo**',
+        'https://github.com/sertdfyguhi/sertdfyguhi-code-bot'
       )
       .setFooter('made by sertdfyguhi#5971')
 
@@ -218,25 +222,6 @@ client.on('message', function (msg) {
       msg.channel.send(
         'Invalid language. Please do `.langs` for all the langauges.'
       )
-    }
-  } else if (msg.content.startsWith(`${prefix}table`)) {
-    if (msg.content == `${prefix}table` ||
-        msg.content == `${prefix}table `) {
-      msg.channel.send('no array provided')
-      return
-    }
-    let array = func.remove_backticks(msg.content.substr(8))
-    array = array.replace(/'/g, '"')
-
-    try {
-      const split = msg.content.split(' ')
-      if (split[split.length - 1] == 'true') {
-        msg.channel.send('```' + table(JSON.parse(array), {singleLine: true}) + '```')
-      } else {
-        msg.channel.send('```' + table(JSON.parse(array)) + '```')
-      }
-    } catch (e) {
-      msg.channel.send('error\n```' + e + '```')
     }
   } else {
     if (msg.content.startsWith(prefix)) {
