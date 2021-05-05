@@ -186,7 +186,7 @@ client.on('message', function (msg) {
 
       res = run[lang_lower](code)
 
-      if (!res.program_error && !res.compiler_error) {
+      if (!res.program_error && !res.compiler_error && res.program_output) {
         try {
           embed.addField('Output', '```\n' + res.program_output + '```')
         } catch (e) {
@@ -197,7 +197,7 @@ client.on('message', function (msg) {
         }
 
         embed.setColor('#4aff5c')
-      } else {
+      } else if (res.program_error || res.compiler_error) {
         if (!res.compiler_error) {
           embed.addField('Output', '```\n' + res.program_error + '```')
         } else {
@@ -205,6 +205,10 @@ client.on('message', function (msg) {
         }
 
         embed.setColor('#ff2b4f')
+      } else {
+        embed.addField('Output', 'No output from program.')
+
+        embed.setColor('#4aff5c')
       }
 
       embed.addField('permlink', res.url)
