@@ -1,5 +1,4 @@
 const discord = require('discord.js')
-const { table } = require('table')
 
 const prefix = 's!'
 const func = require('./functions')
