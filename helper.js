@@ -6,6 +6,11 @@ function get_shibe() {
   return res.json()[0]
 }
 
+function get_cat() {
+  const res = fetch('https://api.thecatapi.com/v1/images/search')
+  return res.json()[0].url
+}
+
 function _arr_to_str(array) {
   let new_array = []
 
@@ -75,5 +80,6 @@ function remove_backticks(string) {
 module.exports = {
   json_embed: json_embed,
   remove_backticks: remove_backticks,
-  get_shibe: get_shibe
+  get_shibe: get_shibe,
+  get_cat: get_cat
 }

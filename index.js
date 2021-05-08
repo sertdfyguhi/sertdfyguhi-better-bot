@@ -61,7 +61,8 @@ client.on('message', function (msg) {
         \n`s!repo {github user} {repo}`: info abount a github repo.\
         \n`s!json {json}`: json reprensentation in embed.\
         \n`s!jsons {array of jsons}`: json reprensentation in embed.\
-        \n`s!shibe`: sends a shibe.'
+        \n`s!shibe`: sends a picture of a shibe.\
+        \n`s!cat`: sends a picture of a cat.'
       )
       .addField(
         '**Repo**',
@@ -231,9 +232,15 @@ client.on('message', function (msg) {
     }
   } else if (msg.content == `${prefix}shibe`) {
     // shibe command
-    
     const embed = new discord.MessageEmbed()
       .setImage(helper.get_shibe())
+      .setColor('#34c6eb')
+      
+    msg.channel.send(embed)
+  } else if (msg.content == `${prefix}cat`) {
+    // cat command
+    const embed = new discord.MessageEmbed()
+      .setImage(helper.get_cat())
       .setColor('#34c6eb')
       
     msg.channel.send(embed)
