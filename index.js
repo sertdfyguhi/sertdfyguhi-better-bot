@@ -1,20 +1,22 @@
 const discord = require('discord.js')
 
 const prefix = 's!'
-const func = require('./functions')
+const helper = require('./helper')
 const run = require('./run')
 const github = require('./github')
 const keepalive = require('./keepalive')
 
 const client = new discord.Client()
 
-client.on('ready', function () {
+client.on('ready', function() {
   console.log('Logged in as \u001b[33m' + client.user.tag)
 
   client.user.setActivity('do s!help for help')
 })
 
 client.on('message', function (msg) {
+  if (msg.author.bot) return;
+  
   if (msg.content.startsWith(`${prefix}json`)) {
     // json and jsons command
     if (msg.content.startsWith(`${prefix}jsons`))  {
@@ -23,11 +25,11 @@ client.on('message', function (msg) {
         msg.channel.send('no json provided')
         return
       }
-      let content = func.remove_backticks(msg.content.substr(8))
+      let content = helper.remove_backticks(msg.content.substr(8))
 
       try {
         for (const json of JSON.parse(content)) {
-          msg.channel.send(func.json_embed(JSON.stringify(json)))
+          msg.channel.send(helper.json_embed(JSON.stringify(json)))
         }
       } catch (e) {
         msg.channel.send('error\n' + '```' + e + '```')
@@ -40,8 +42,8 @@ client.on('message', function (msg) {
         return
       }
 
-      let content = func.remove_backticks(msg.content.substr(7))
-      msg.channel.send(func.json_embed(content))
+      let content = helper.remove_backticks(msg.content.substr(7))
+      msg.channel.send(helper.json_embed(content))
     }
   } else if (msg.content == `${prefix}help`) {
     // help command
@@ -58,7 +60,8 @@ client.on('message', function (msg) {
         \n`s!user {github user}`: info about a github account.\
         \n`s!repo {github user} {repo}`: info abount a github repo.\
         \n`s!json {json}`: json reprensentation in embed.\
-        \n`s!jsons {array of jsons}`: json reprensentation in embed.'
+        \n`s!jsons {array of jsons}`: json reprensentation in embed.\
+        \n`s!shibe`: sends a shibe.'
       )
       .addField(
         '**Repo**',
@@ -178,7 +181,7 @@ client.on('message', function (msg) {
       .setTitle("sertdfyguhi's code bot")
       .setFooter('Requested by @' + msg.author.username)
 
-    code = func.remove_backticks(code)
+    code = helper.remove_backticks(code)
 
     if (run.langs.includes(lang_lower) && code != '') {
       let res
@@ -226,6 +229,14 @@ client.on('message', function (msg) {
         'Invalid language. Please do `.langs` for all the langauges.'
       )
     }
+  } else if (msg.content == `${prefix}shibe`) {
+    // shibe command
+    
+    const embed = new discord.MessageEmbed()
+      .setImage(helper.get_shibe())
+      .setColor('#34c6eb')
+      
+    msg.channel.send(embed)
   } else {
     if (msg.content.startsWith(prefix)) {
       msg.channel.send('Invalid command.')
