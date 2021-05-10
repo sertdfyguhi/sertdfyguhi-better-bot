@@ -1,5 +1,6 @@
 const discord = require('discord.js')
 const fetch = require('sync-fetch')
+const fs = require('fs')
 
 function get_shibe() {
   const res = fetch('https://shibe.online/api/shibes')
@@ -81,5 +82,5 @@ module.exports = {
   json_embed: json_embed,
   remove_backticks: remove_backticks,
   get_shibe: get_shibe,
-  get_cat: get_cat
+  get_cat: get_cat,
 }

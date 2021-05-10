@@ -1,4 +1,5 @@
 const discord = require('discord.js')
+const rp = require('random-puppy')
 
 const prefix = 's!'
 const helper = require('./helper')
@@ -9,7 +10,7 @@ const keepalive = require('./keepalive')
 const client = new discord.Client()
 
 client.on('ready', function() {
-  console.log('Logged in as \u001b[33m' + client.user.tag)
+  console.log(`Logged in as \u001b[33m${client.user.tag}\u001b[0m`)
 
   client.user.setActivity('do s!help for help')
 })
@@ -62,11 +63,12 @@ client.on('message', function (msg) {
         \n`s!json {json}`: json reprensentation in embed.\
         \n`s!jsons {array of jsons}`: json reprensentation in embed.\
         \n`s!shibe`: sends a picture of a shibe.\
-        \n`s!cat`: sends a picture of a cat.'
+        \n`s!cat`: sends a picture of a cat.\
+        \n`s!earth`: random picture from r/earthporn'
       )
       .addField(
         '**Repo**',
-        'https://github.com/sertdfyguhi/sertdfyguhi-code-bot'
+        'https://github.com/sertdfyguhi/sertdfyguhi-better-bot'
       )
       .setFooter('made by sertdfyguhi#5971')
 
@@ -244,7 +246,15 @@ client.on('message', function (msg) {
       .setColor('#34c6eb')
       
     msg.channel.send(embed)
-  } else {
+  } else if (msg.content == `${prefix}earth`) {
+    rp('earthporn').then(url => {
+      const embed = new discord.MessageEmbed()
+        .setImage(url)
+        .setColor('#34c6eb')
+      
+      msg.channel.send(embed)
+    })
+  }else {
     if (msg.content.startsWith(prefix)) {
       msg.channel.send('Invalid command.')
     }
