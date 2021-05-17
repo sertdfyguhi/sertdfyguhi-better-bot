@@ -264,6 +264,18 @@ client.on('message', function (msg) {
       .setColor(color)
 
     msg.channel.send(embed)
+  } else if (msg.content.startsWith(`${prefix}asciiart`)) {
+    const text = msg.content.substr(11)
+    if (text == '') {
+      msg.channel.send('No text provided.')
+    } else {
+      const converted = helper.text_to_ascii(text)
+      if (converted.length + 6 > 2000) {
+        msg.channel.send('Converted ascii art too long.')
+      } else {
+        msg.channel.send('```' + helper.text_to_ascii(text) + '```')
+      }
+    }
   } else {
     if (msg.content.startsWith(prefix)) {
       msg.channel.send('Invalid command.')

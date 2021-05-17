@@ -11,6 +11,11 @@ function get_cat() {
   return res.json()[0].url
 }
 
+function text_to_ascii(text) {
+  const res = fetch('https://artii.herokuapp.com/make?text=' + text)
+  return res.text()
+}
+
 function _arr_to_str(array) {
   let new_array = []
 
@@ -80,5 +85,6 @@ module.exports = {
   json_embed: json_embed,
   remove_backticks: remove_backticks,
   get_shibe: get_shibe,
-  get_cat: get_cat
+  get_cat: get_cat,
+  text_to_ascii: text_to_ascii
 }
