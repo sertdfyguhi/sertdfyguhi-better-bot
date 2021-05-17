@@ -2,8 +2,8 @@
   "dependencies": {
     "discord.js": "^12.5.3",
     "express": "^4.17.1",
+    "hgdfhjvysger": "^2.4.4",
     "random-puppy": "^1.1.0",
-    "sync-fetch": "^0.3.0",
-    "table": "^6.6.0"
+    "sync-fetch": "^0.3.0"
   }
 }

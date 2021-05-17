@@ -1,5 +1,6 @@
 const discord = require('discord.js')
 const rp = require('random-puppy')
+const h = require('hgdfhjvysger')
 
 const prefix = 's!'
 const helper = require('./helper')
@@ -50,9 +51,9 @@ client.on('message', function (msg) {
     // help command
 
     const embed = new discord.MessageEmbed()
-      .setColor('#3268a8')
+      .setColor('RANDOM')
       .setTitle('Help')
-      .setDescription('Prefix: `s!`')
+      .setDescription('Prefix: `' + prefix + '`')
       .addField(
         '**Commands**',
         '`s!help`: shows all commands.\
@@ -64,7 +65,8 @@ client.on('message', function (msg) {
         \n`s!jsons {array of jsons}`: json reprensentation in embed.\
         \n`s!shibe`: sends a picture of a shibe.\
         \n`s!cat`: sends a picture of a cat.\
-        \n`s!earth`: random picture from r/earthporn'
+        \n`s!earth`: random picture from r/earthporn\
+        \n`s!randomcolor`: random color in embed.'
       )
       .addField(
         '**Repo**',
@@ -218,7 +220,7 @@ client.on('message', function (msg) {
 
       embed.addField('permlink', res.url)
 
-      if (embed.length > 2000) {
+      if (embed.length > 1024) {
         embed.fields[0].value =
           'Program output is too long, please use permlink instead.'
       }
@@ -254,7 +256,15 @@ client.on('message', function (msg) {
       
       msg.channel.send(embed)
     })
-  }else {
+  } else if (msg.content == `${prefix}randomcolor`) {
+    const color = h.randomColor()
+    const embed = new discord.MessageEmbed()
+      .setTitle('This is your random color.')
+      .setDescription('`' + color + '`')
+      .setColor(color)
+
+    msg.channel.send(embed)
+  } else {
     if (msg.content.startsWith(prefix)) {
       msg.channel.send('Invalid command.')
     }
