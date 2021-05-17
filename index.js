@@ -67,7 +67,9 @@ client.on('message', function (msg) {
         \n`s!cat`: sends a picture of a cat.\
         \n`s!earth`: random picture from r/earthporn\
         \n`s!randomcolor`: random color in embed.\
-        \n`s!asciiart {text}`: convert text into ascii art.'
+        \n`s!asciiart {text}`: convert text into ascii art.\
+        \n`s!userinfo {mention}`: info of mention.\
+        \n`s!serverinfo`: info of server.'
       )
       .addField(
         '**Repo**',
@@ -92,7 +94,7 @@ client.on('message', function (msg) {
       .setFooter('made by sertdfyguhi#5971')
 
     msg.channel.send(embed)
-  } else if (msg.content.startsWith(`${prefix}user`)) {
+  } else if (msg.content.startsWith(`${prefix}user `)) {
     let split = msg.content.split(' ')
 
     if (!split[1] || split[1] == '') {
@@ -250,6 +252,7 @@ client.on('message', function (msg) {
       
     msg.channel.send(embed)
   } else if (msg.content == `${prefix}earth`) {
+    // earth command
     rp('earthporn').then(url => {
       const embed = new discord.MessageEmbed()
         .setImage(url)
@@ -258,6 +261,7 @@ client.on('message', function (msg) {
       msg.channel.send(embed)
     })
   } else if (msg.content == `${prefix}randomcolor`) {
+    // randomcolor command
     const color = h.randomColor()
     const embed = new discord.MessageEmbed()
       .setTitle('This is your random color.')
@@ -266,6 +270,7 @@ client.on('message', function (msg) {
 
     msg.channel.send(embed)
   } else if (msg.content.startsWith(`${prefix}asciiart`)) {
+    // ascii art command
     const text = msg.content.substr(11)
     if (text == '') {
       msg.channel.send('No text provided.')
@@ -277,6 +282,48 @@ client.on('message', function (msg) {
         msg.channel.send('```' + helper.text_to_ascii(text) + '```')
       }
     }
+  } else if (msg.content.startsWith(`${prefix}userinfo`)) {
+    // userinfo command
+    const user = msg.mentions.users.first()
+    const member = msg.guild.member(user)
+    if (user) {
+      const embed = new discord.MessageEmbed()
+        .setTitle(`${user.tag}\'s info`)
+        .setTimestamp()
+        .addField('Username', user.username, true)
+        .addField('Status', user.presence.status, true)
+        .addField('Discord ID', user.id, true)
+        .addField('Joined at', member.joinedAt.toDateString(), true)
+        .addField('Created at', user.createdAt.toDateString(), true)
+        .setColor('RANDOM')
+        .setThumbnail(user.displayAvatarURL({ dynamic: true }))
+
+      if (msg.member.nickname == null) {
+        embed.addField('**Nickname**', 'No nickname', true)
+      } else {
+        embed.addField('**Nickname**', msg.member.nickname, true)
+      }
+      msg.channel.send(embed)
+    } else {
+      msg.channel.send('Invalid user.')
+    }
+  } else if (msg.content == `${prefix}serverinfo`) {
+    const embed = new discord.MessageEmbed()
+      .setTitle('Server info')
+      .setThumbnail(msg.guild.iconURL())
+      .setColor('RANDOM')
+      .addField('Server name', msg.guild.name, true)
+      .addField('Member count', msg.guild.memberCount, true)
+      .addField('Role count', msg.guild.roles.cache.size, true)
+      .addField(
+        'Bot count',
+        msg.guild.members.cache.filter((member) => member.user.bot).size,
+        true
+      )
+      .addField('Channel count', msg.guild.channels.cache.size, true)
+      .addField('Created at', msg.guild.createdAt.toDateString(), true)
+      .addField('Server owner', msg.guild.owner, true)
+    msg.channel.send(embed)
   } else {
     if (msg.content.startsWith(prefix)) {
       msg.channel.send('Invalid command.')
