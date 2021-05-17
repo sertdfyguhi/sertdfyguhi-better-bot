@@ -66,7 +66,8 @@ client.on('message', function (msg) {
         \n`s!shibe`: sends a picture of a shibe.\
         \n`s!cat`: sends a picture of a cat.\
         \n`s!earth`: random picture from r/earthporn\
-        \n`s!randomcolor`: random color in embed.'
+        \n`s!randomcolor`: random color in embed.\
+        \n`s!asciiart {text}`: convert text into ascii art.'
       )
       .addField(
         '**Repo**',
