@@ -69,7 +69,8 @@ client.on('message', function (msg) {
         \n`s!randomcolor`: random color in embed.\
         \n`s!asciiart {text}`: convert text into ascii art.\
         \n`s!userinfo {mention}`: info of mention.\
-        \n`s!serverinfo`: info of server.'
+        \n`s!serverinfo`: info of server.\
+        \n`s!color {hex color code}`: get the color of a hex color code.'
       )
       .addField(
         '**Repo**',
@@ -325,6 +326,18 @@ client.on('message', function (msg) {
       .addField('Created at', msg.guild.createdAt.toDateString(), true)
       .addField('Server owner', msg.guild.owner, true)
     msg.channel.send(embed)
+  } else if (msg.content.startsWith(`${prefix}color`)) {
+    const color = msg.content.split(' ')[1]
+    if (/^#[0-9A-F]{6}$/i.test(color)) {
+      const attachment = new discord.MessageAttachment(helper.create_color_img(color),'color.png')
+
+      const embed = new discord.MessageEmbed()
+        .attachFiles(attachment)
+        .setColor(color)
+        .setImage('attachment://color.png')
+
+      msg.channel.send(embed)
+    }
   } else {
     if (msg.content.startsWith(prefix)) {
       msg.channel.send('Invalid command.')

@@ -1,6 +1,7 @@
 const discord = require('discord.js')
 const fetch = require('sync-fetch')
 const figlet = require('figlet')
+const { createCanvas, loadImage } = require('canvas')
 
 function get_shibe() {
   const res = fetch('https://shibe.online/api/shibes')
@@ -20,6 +21,16 @@ function text_to_ascii(text, cb) {
       cb(data)
     }
   })
+}
+
+function create_color_img(color) {
+  const canvas = createCanvas(1000, 1000)
+  const context = canvas.getContext('2d')
+
+  context.fillStyle = color
+  context.fillRect(0, 0, 1000, 1000)
+
+  return canvas.toBuffer('image/png')
 }
 
 function _arr_to_str(array) {
@@ -92,5 +103,6 @@ module.exports = {
   remove_backticks: remove_backticks,
   get_shibe: get_shibe,
   get_cat: get_cat,
-  text_to_ascii: text_to_ascii
+  text_to_ascii: text_to_ascii,
+  create_color_img: create_color_img
 }
