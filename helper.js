@@ -1,5 +1,6 @@
 const discord = require('discord.js')
 const fetch = require('sync-fetch')
+const figlet = require('figlet')
 
 function get_shibe() {
   const res = fetch('https://shibe.online/api/shibes')
@@ -11,9 +12,14 @@ function get_cat() {
   return res.json()[0].url
 }
 
-function text_to_ascii(text) {
-  const res = fetch('https://artii.herokuapp.com/make?text=' + text)
-  return res.text()
+function text_to_ascii(text, cb) {
+  figlet(text, (err, data) => {
+    if (err) {
+      cb(err)
+    } else {
+      cb(data)
+    }
+  })
 }
 
 function _arr_to_str(array) {

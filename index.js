@@ -275,12 +275,13 @@ client.on('message', function (msg) {
     if (text == '') {
       msg.channel.send('No text provided.')
     } else {
-      const converted = helper.text_to_ascii(text)
-      if (converted.length + 6 > 2000) {
-        msg.channel.send('Converted ascii art too long.')
-      } else {
-        msg.channel.send('```' + helper.text_to_ascii(text) + '```')
-      }
+      helper.text_to_ascii(text, data => {
+        if (data.length + 6 > 2000) {
+          msg.channel.send('Ascii art too long.')
+        } else {
+          msg.channel.send('```' + data + '```')
+        }
+      })
     }
   } else if (msg.content.startsWith(`${prefix}userinfo`)) {
     // userinfo command
