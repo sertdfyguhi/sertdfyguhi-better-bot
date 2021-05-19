@@ -76,17 +76,18 @@ client.on('message', function (msg) {
         '**Repo**',
         'https://github.com/sertdfyguhi/sertdfyguhi-better-bot'
       )
+      .addField(
+        'Bot invite',
+        'https://discord.com/api/oauth2/authorize?client_id=826414044448555049&permissions=2048&scope=bot'
+      )
       .setFooter('made by sertdfyguhi#5971')
 
     msg.channel.send(embed)
   } else if (msg.content == `${prefix}langs`) {
     // langs command
-
     let langs = ''
 
-    for (const lang of run.langs) {
-      langs += '`' + lang + '` '
-    }
+    for (const lang of run.langs) langs += '`' + lang + '` '
 
     const embed = new discord.MessageEmbed()
       .setColor('#3268a8')
@@ -112,18 +113,14 @@ client.on('message', function (msg) {
         .setTitle(info.login)
         .setURL(info.html_url)
         .setThumbnail(info.avatar_url)
-
-      if (!info.bio == null) {
-        embed.setDescription(info.bio)
-      }
-
-      embed
         .addField('Followers', info.followers, true)
         .addField('Following', info.following, true)
         .addField('Repos', info.public_repos, true)
         .addField('Gists', info.public_gists, true)
         .addField('Created on', info.created_at, true)
         .addField('Updated on', info.updated_at, true)
+      
+      if (!info.bio == null) embed.setDescription(info.bio)
 
       msg.channel.send(embed)
     }
@@ -264,10 +261,14 @@ client.on('message', function (msg) {
   } else if (msg.content == `${prefix}randomcolor`) {
     // randomcolor command
     const color = h.randomColor()
+    const attachment = new discord.MessageAttachment(helper.create_color_img(color),'color.png')
+
     const embed = new discord.MessageEmbed()
+      .attachFiles(attachment)
       .setTitle('This is your random color.')
       .setDescription('`' + color + '`')
       .setColor(color)
+      .setImage('attachment://color.png')
 
     msg.channel.send(embed)
   } else if (msg.content.startsWith(`${prefix}asciiart`)) {
@@ -297,14 +298,19 @@ client.on('message', function (msg) {
         .addField('Discord ID', user.id, true)
         .addField('Joined at', member.joinedAt.toDateString(), true)
         .addField('Created at', user.createdAt.toDateString(), true)
+        .addField('Nickname', msg.member.nickname || 'No nickname', true)
         .setColor('RANDOM')
         .setThumbnail(user.displayAvatarURL({ dynamic: true }))
+        
 
-      if (msg.member.nickname == null) {
-        embed.addField('**Nickname**', 'No nickname', true)
-      } else {
-        embed.addField('**Nickname**', msg.member.nickname, true)
-      }
+      let roles = []
+      member.roles.cache.each(r => {
+        if (r.id == msg.guild.roles.everyone.id) return
+        roles.push(r)
+      })
+
+      embed.addField('Roles', roles.join(' ') || 'No roles', true)
+
       msg.channel.send(embed)
     } else {
       msg.channel.send('Invalid user.')
@@ -329,14 +335,18 @@ client.on('message', function (msg) {
   } else if (msg.content.startsWith(`${prefix}color`)) {
     const color = msg.content.split(' ')[1]
     if (/^#[0-9A-F]{6}$/i.test(color)) {
-      const attachment = new discord.MessageAttachment(helper.create_color_img(color),'color.png')
+      const buffer = helper.create_color_img(color).toBuffer('image/png')
+      const attachment = new discord.MessageAttachment(buffer, 'color.png')
 
       const embed = new discord.MessageEmbed()
         .attachFiles(attachment)
+        .setTitle('Color `' + color + '`')
         .setColor(color)
         .setImage('attachment://color.png')
 
       msg.channel.send(embed)
+    } else {
+      msg.channel.send('Invalid hex color code.')
     }
   } else {
     if (msg.content.startsWith(prefix)) {

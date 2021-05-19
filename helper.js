@@ -1,7 +1,7 @@
 const discord = require('discord.js')
 const fetch = require('sync-fetch')
 const figlet = require('figlet')
-const { createCanvas, loadImage } = require('canvas')
+const { createCanvas } = require('canvas')
 
 function get_shibe() {
   const res = fetch('https://shibe.online/api/shibes')
@@ -30,7 +30,7 @@ function create_color_img(color) {
   context.fillStyle = color
   context.fillRect(0, 0, 1000, 1000)
 
-  return canvas.toBuffer('image/png')
+  return canvas
 }
 
 function _arr_to_str(array) {
