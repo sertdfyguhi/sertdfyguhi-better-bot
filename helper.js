@@ -88,8 +88,10 @@ function json_embed(content) {
       embed.addField(`**${el}**`, '```json\n' + _arr_to_str(json[el]) + '```', true)
     } else if (typeof json[el] == 'object') {
       embed.addField(`**${el}**`, '```json\n' + JSON.stringify(json[el], null, 2) + '```', true)
+    } else if (typeof json[el] == 'string') {
+      embed.addField(`**${el}**`, '```json\n"' + json[el] + '"```', true)
     } else {
-      embed.addField(`**${el}**`, '```' + json[el].toString() + '```', true)
+      embed.addField(`**${el}**`, '```json\n' + json[el].toString() + '```', true)
     }
   }
 
