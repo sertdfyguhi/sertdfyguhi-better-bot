@@ -1,4 +1,4 @@
-const f = require('sync-fetch')
+const f = require('node-fetch')
 
 const langs = [
   'python',
@@ -18,136 +18,136 @@ const langs = [
   'coffescript',
 ]
 
-function python(code) {
-  const res = f('https://wandbox.org/api/compile.json', {
+async function python(code) {
+  const res = await f('https://wandbox.org/api/compile.json', {
     method: 'POST',
     body: JSON.stringify({ code: code, save: true, compiler: 'cpython-head' }),
-  }).json()
+  })
 
   return res
 }
 
-function cpp_c(code) {
-  const res = f('https://wandbox.org/api/compile.json', {
+async function cpp_c(code) {
+  const res = await f('https://wandbox.org/api/compile.json', {
     method: 'POST',
     body: JSON.stringify({ code: code, save: true, compiler: 'gcc-head' }),
-  }).json()
+  })
 
   return res
 }
 
-function java(code) {
-  const res = f('https://wandbox.org/api/compile.json', {
+async function java(code) {
+  const res = await f('https://wandbox.org/api/compile.json', {
     method: 'POST',
     body: JSON.stringify({ code: code, save: true, compiler: 'openjdk-head' }),
-  }).json()
+  })
 
   return res
 }
 
-function js(code) {
-  const res = f('https://wandbox.org/api/compile.json', {
+async function js(code) {
+  const res = await f('https://wandbox.org/api/compile.json', {
     method: 'POST',
     body: JSON.stringify({ code: code, save: true, compiler: 'nodejs-head' }),
-  }).json()
+  })
 
   return res
 }
 
-function lua(code) {
-  const res = f('https://wandbox.org/api/compile.json', {
+async function lua(code) {
+  const res = await f('https://wandbox.org/api/compile.json', {
     method: 'POST',
     body: JSON.stringify({ code: code, save: true, compiler: 'lua-5.4.0' }),
-  }).json()
+  })
 
   return res
 }
 
-function rust(code) {
-  const res = f('https://wandbox.org/api/compile.json', {
+async function rust(code) {
+  const res = await f('https://wandbox.org/api/compile.json', {
     method: 'POST',
     body: JSON.stringify({ code: code, save: true, compiler: 'rust-head' }),
-  }).json()
+  })
 
   return res
 }
 
-function go(code) {
-  const res = f('https://wandbox.org/api/compile.json', {
+async function go(code) {
+  const res = await f('https://wandbox.org/api/compile.json', {
     method: 'POST',
     body: JSON.stringify({ code: code, save: true, compiler: 'go-1.14.2' }),
-  }).json()
+  })
 
   return res
 }
 
-function csharp(code) {
-  const res = f('https://wandbox.org/api/compile.json', {
+async function csharp(code) {
+  const res = await f('https://wandbox.org/api/compile.json', {
     method: 'POST',
     body: JSON.stringify({ code: code, save: true, compiler: 'mcs-head' }),
-  }).json()
+  })
 
   return res
 }
 
-function haskell(code) {
-  const res = f('https://wandbox.org/api/compile.json', {
+async function haskell(code) {
+  const res = await f('https://wandbox.org/api/compile.json', {
     method: 'POST',
     body: JSON.stringify({ code: code, save: true, compiler: 'ghc-head' }),
-  }).json()
+  })
 
   return res
 }
 
-function ruby(code) {
-  const res = f('https://wandbox.org/api/compile.json', {
+async function ruby(code) {
+  const res = await f('https://wandbox.org/api/compile.json', {
     method: 'POST',
     body: JSON.stringify({ code: code, save: true, compiler: 'ruby-head' }),
-  }).json()
+  })
 
   return res
 }
 
-function ts(code) {
-  const res = f('https://wandbox.org/api/compile.json', {
+async function ts(code) {
+  const res = await f('https://wandbox.org/api/compile.json', {
     method: 'POST',
     body: JSON.stringify({
       code: code,
       save: true,
       compiler: 'typescript-3.9.5',
     }),
-  }).json()
+  })
 
   return res
 }
 
-function swift(code) {
-  const res = f('https://wandbox.org/api/compile.json', {
+async function swift(code) {
+  const res = await f('https://wandbox.org/api/compile.json', {
     method: 'POST',
     body: JSON.stringify({ code: code, save: true, compiler: 'swift-head' }),
-  }).json()
+  })
 
   return res
 }
 
-function perl(code) {
-  const res = f('https://wandbox.org/api/compile.json', {
+async function perl(code) {
+  const res = await f('https://wandbox.org/api/compile.json', {
     method: 'POST',
     body: JSON.stringify({ code: code, save: true, compiler: 'perl-head' }),
-  }).json()
+  })
 
   return res
 }
 
-function coffeescript(code) {
-  const res = f('https://wandbox.org/api/compile.json', {
+async function coffeescript(code) {
+  const res = await f('https://wandbox.org/api/compile.json', {
     method: 'POST',
     body: JSON.stringify({
       code: code,
       save: true,
       compiler: 'coffeescript-head',
     }),
-  }).json()
+  })
 
   return res
 }

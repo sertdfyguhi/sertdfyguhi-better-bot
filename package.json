@@ -5,7 +5,6 @@
     "express": "^4.17.1",
     "figlet": "^1.5.0",
     "hgdfhjvysger": "^2.4.5",
-    "random-puppy": "^1.1.0",
-    "sync-fetch": "^0.3.0"
+    "random-puppy": "^1.1.0"
   }
 }

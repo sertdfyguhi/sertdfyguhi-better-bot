@@ -1,11 +1,13 @@
-const fetch = require('sync-fetch')
+const fetch = require('node-fetch')
 
-function user(user) {
-  return fetch('https://api.github.com/users/' + user).json()
+async function user(user) {
+  const res = await fetch('https://api.github.com/users/' + user)
+  return res
 }
 
-function repo(user, repo) {
-  return fetch(`https://api.github.com/repos/${user}/${repo}`).json()
+async function repo(user, repo) {
+  const res = await fetch(`https://api.github.com/repos/${user}/${repo}`)
+  return res
 }
 
 module.exports = {

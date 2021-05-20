@@ -70,7 +70,8 @@ client.on('message', function (msg) {
         \n`s!asciiart {text}`: convert text into ascii art.\
         \n`s!userinfo {mention}`: info of mention.\
         \n`s!serverinfo`: info of server.\
-        \n`s!color {hex color code}`: get the color of a hex color code.'
+        \n`s!color {hex color code}`: get the color of a hex color code.\
+        \n`s!carbon {hex color code} {code}`: a carbon.now.sh code image.'
       )
       .addField(
         '**Repo**',
@@ -104,26 +105,29 @@ client.on('message', function (msg) {
       return null
     }
 
-    const info = github.user(split[1])
-    let embed = new discord.MessageEmbed()
-    if (info.message) {
-      msg.channel.send('User not found.')
-    } else {
-      embed
-        .setTitle(info.login)
-        .setURL(info.html_url)
-        .setThumbnail(info.avatar_url)
-        .addField('Followers', info.followers, true)
-        .addField('Following', info.following, true)
-        .addField('Repos', info.public_repos, true)
-        .addField('Gists', info.public_gists, true)
-        .addField('Created on', info.created_at, true)
-        .addField('Updated on', info.updated_at, true)
-      
-      if (!info.bio == null) embed.setDescription(info.bio)
+    github.user(split[1])
+      .then(res => res.json())
+      .then(info => {
+        let embed = new discord.MessageEmbed()
+        if (info.message) {
+          msg.channel.send('User not found.')
+        } else {
+          embed
+            .setTitle(info.login)
+            .setURL(info.html_url)
+            .setThumbnail(info.avatar_url)
+            .addField('Followers', info.followers, true)
+            .addField('Following', info.following, true)
+            .addField('Repos', info.public_repos, true)
+            .addField('Gists', info.public_gists, true)
+            .addField('Created on', info.created_at, true)
+            .addField('Updated on', info.updated_at, true)
+          
+          if (!info.bio == null) embed.setDescription(info.bio)
 
-      msg.channel.send(embed)
-    }
+          msg.channel.send(embed)
+        }
+      })
   } else if (msg.content.startsWith(`${prefix}repo`)) {
     let split = msg.content.split(' ')
 
@@ -135,31 +139,33 @@ client.on('message', function (msg) {
       return null
     }
 
-    const info = github.repo(split[1], split[2])
+    github.repo(split[1], split[2])
+      .then(res => res.json())
+      .then(info => {
+        if (info.message) {
+          msg.channel.send('Repo not found.')
+        } else {
+          let embed = new discord.MessageEmbed()
+            .setTitle(info.name)
+            .setURL(info.html_url)
+            .setAuthor(info.owner.login, info.owner.avatar_url, info.owner.html_url)
 
-    if (info.message) {
-      msg.channel.send('Repo not found.')
-    } else {
-      let embed = new discord.MessageEmbed()
-        .setTitle(info.name)
-        .setURL(info.html_url)
-        .setAuthor(info.owner.login, info.owner.avatar_url, info.owner.html_url)
+          if (info.description != null) {
+            embed.setDescription(info.description)
+          }
 
-      if (info.description != null) {
-        embed.setDescription(info.description)
-      }
+          embed
+            .addField('Stars', info.stargazers_count, true)
+            .addField('Watchers', info.subscribers_count, true)
+            .addField('Open issues', info.open_issues_count, true)
+            .addField('Forks', info.forks, true)
+            .addField('Created on', info.created_at, true)
+            .addField('Last updated on', info.updated_at, true)
+            .addField('Last commited on', info.pushed_at, true)
 
-      embed
-        .addField('Stars', info.stargazers_count, true)
-        .addField('Watchers', info.subscribers_count, true)
-        .addField('Open issues', info.open_issues_count, true)
-        .addField('Forks', info.forks, true)
-        .addField('Created on', info.created_at, true)
-        .addField('Last updated on', info.updated_at, true)
-        .addField('Last commited on', info.pushed_at, true)
-
-      msg.channel.send(embed)
-    }
+          msg.channel.send(embed)
+        }
+      })
   } else if (msg.content.startsWith(`${prefix}code`)) {
     // code command
     let split = msg.content.split(' ')
@@ -190,65 +196,74 @@ client.on('message', function (msg) {
     code = helper.remove_backticks(code)
 
     if (run.langs.includes(lang_lower) && code != '') {
-      let res
+      run[lang_lower](code)
+        .then(res => res.json())
+        .then(res => {
+          if (!res.program_error && !res.compiler_error && res.program_output) {
+            try {
+              embed.addField('Output', '```\n' + res.program_output + '```')
+            } catch (e) {
+              embed.addField(
+                'Output',
+                'Program output is too long, please use permlink instead.'
+              )
+            }
 
-      res = run[lang_lower](code)
+            embed.setColor('#4aff5c')
+          } else if (res.program_error || res.compiler_error) {
+            if (!res.compiler_error) {
+              embed.addField('Output', '```\n' + res.program_error + '```')
+            } else {
+              embed.addField('Output', '```\n' + res.compiler_error + '```')
+            }
 
-      if (!res.program_error && !res.compiler_error && res.program_output) {
-        try {
-          embed.addField('Output', '```\n' + res.program_output + '```')
-        } catch (e) {
-          embed.addField(
-            'Output',
-            'Program output is too long, please use permlink instead.'
-          )
-        }
+            embed.setColor('#ff2b4f')
+          } else {
+            embed.addField('Output', 'No output from program.')
 
-        embed.setColor('#4aff5c')
-      } else if (res.program_error || res.compiler_error) {
-        if (!res.compiler_error) {
-          embed.addField('Output', '```\n' + res.program_error + '```')
-        } else {
-          embed.addField('Output', '```\n' + res.compiler_error + '```')
-        }
+            embed.setColor('#4aff5c')
+          }
 
-        embed.setColor('#ff2b4f')
-      } else {
-        embed.addField('Output', 'No output from program.')
+          embed.addField('permlink', res.url)
 
-        embed.setColor('#4aff5c')
-      }
+          if (embed.length > 1024) {
+            embed.fields[0].value =
+              'Program output is too long, please use permlink instead.'
+          }
 
-      embed.addField('permlink', res.url)
-
-      if (embed.length > 1024) {
-        embed.fields[0].value =
-          'Program output is too long, please use permlink instead.'
-      }
-
-      msg.channel.send(embed)
+          msg.channel.send(embed)
+        })
     } else {
-      if (code == '') {
+      if (code != '') {
+        msg.channel.send(
+          'Invalid language. Please do `.langs` for all the langauges.'
+        )
+      } else {
         msg.channel.send('No code to run.')
       }
-      msg.channel.send(
-        'Invalid language. Please do `.langs` for all the langauges.'
-      )
     }
   } else if (msg.content == `${prefix}shibe`) {
     // shibe command
-    const embed = new discord.MessageEmbed()
-      .setImage(helper.get_shibe())
-      .setColor('#34c6eb')
+    helper.get_shibe()
+      .then(res => res.json())
+      .then(data => {
+        const embed = new discord.MessageEmbed()
+          .setImage(data[0])
+          .setColor('#34c6eb')
       
-    msg.channel.send(embed)
+        msg.channel.send(embed)
+      })
   } else if (msg.content == `${prefix}cat`) {
     // cat command
-    const embed = new discord.MessageEmbed()
-      .setImage(helper.get_cat())
-      .setColor('#34c6eb')
-      
-    msg.channel.send(embed)
+    helper.get_cat()
+      .then(res => res.json())
+      .then(data => {
+        const embed = new discord.MessageEmbed()
+          .setImage(data[0].url)
+          .setColor('#34c6eb')
+          
+        msg.channel.send(embed)
+      })
   } else if (msg.content == `${prefix}earth`) {
     // earth command
     rp('earthporn').then(url => {
@@ -334,7 +349,7 @@ client.on('message', function (msg) {
     msg.channel.send(embed)
   } else if (msg.content.startsWith(`${prefix}color`)) {
     const color = msg.content.split(' ')[1]
-    if (/^#[0-9A-F]{6}$/i.test(color)) {
+    if (helper.check_hex(color)) {
       const buffer = helper.create_color_img(color).toBuffer('image/png')
       const attachment = new discord.MessageAttachment(buffer, 'color.png')
 
@@ -347,6 +362,25 @@ client.on('message', function (msg) {
       msg.channel.send(embed)
     } else {
       msg.channel.send('Invalid hex color code.')
+    }
+  } else if (msg.content.startsWith(`${prefix}carbon`)) {
+    const hex = msg.content.split(' ')[1]
+    const code = helper.remove_backticks(msg.content.substr(hex.length + 10))
+    if (helper.check_hex(hex)) {
+      const rgb = helper.hex_to_rgb(hex)
+      const rgb_str = `rgb(${rgb.join(' ')})`
+      helper.get_carbon(code, rgb_str)
+        .then(res => res.buffer())
+        .then(buffer => {
+          const attachment = new discord.MessageAttachment(buffer, 'carbon.png')
+
+          const embed = new discord.MessageEmbed()
+            .attachFiles(attachment)
+            .setColor(hex)
+            .setImage('attachment://carbon.png')
+
+          msg.channel.send(embed)
+        })
     }
   } else {
     if (msg.content.startsWith(prefix)) {

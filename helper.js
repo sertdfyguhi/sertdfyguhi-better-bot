@@ -1,16 +1,29 @@
 const discord = require('discord.js')
-const fetch = require('sync-fetch')
+const fetch = require('node-fetch')
 const figlet = require('figlet')
 const { createCanvas } = require('canvas')
 
-function get_shibe() {
-  const res = fetch('https://shibe.online/api/shibes')
-  return res.json()[0]
+async function get_shibe() {
+  const res = await fetch('https://shibe.online/api/shibes')
+  return res
 }
 
-function get_cat() {
-  const res = fetch('https://api.thecatapi.com/v1/images/search')
-  return res.json()[0].url
+async function get_cat() {
+  const res = await fetch('https://api.thecatapi.com/v1/images/search')
+  return res
+}
+
+async function get_carbon(code, rgb) {
+  const url = `https://carbonnowsh.herokuapp.com?code=${code.replace(/\n/g, '%250A')}&backgroundColor=${rgb}`
+  const res = await fetch(url)
+  return res
+}
+
+function hex_to_rgb(color) {
+  var res = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color);
+  return [parseInt(res[1], 16),
+      parseInt(res[2], 16),
+      parseInt(res[3], 16)]
 }
 
 function text_to_ascii(text, cb) {
@@ -31,6 +44,10 @@ function create_color_img(color) {
   context.fillRect(0, 0, 1000, 1000)
 
   return canvas
+}
+
+function check_hex(color) {
+  return /^#[0-9A-F]{6}$/i.test(color)
 }
 
 function _arr_to_str(array) {
@@ -104,5 +121,8 @@ module.exports = {
   get_shibe: get_shibe,
   get_cat: get_cat,
   text_to_ascii: text_to_ascii,
-  create_color_img: create_color_img
+  create_color_img: create_color_img,
+  hex_to_rgb: hex_to_rgb,
+  check_hex: check_hex,
+  get_carbon: get_carbon
 }
