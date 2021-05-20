@@ -71,7 +71,8 @@ client.on('message', function (msg) {
         \n`s!userinfo {mention}`: info of mention.\
         \n`s!serverinfo`: info of server.\
         \n`s!color {hex color code}`: get the color of a hex color code.\
-        \n`s!carbon {hex color code} {code}`: a carbon.now.sh code image.'
+        \n`s!carbon {hex color code / RANDOM} {code}`: a carbon.now.sh code image.\
+        \n`s!randomcap {text}`: randomly capitalizes text.'
       )
       .addField(
         '**Repo**',
@@ -364,7 +365,14 @@ client.on('message', function (msg) {
       msg.channel.send('Invalid hex color code.')
     }
   } else if (msg.content.startsWith(`${prefix}carbon`)) {
-    const hex = msg.content.split(' ')[1]
+    let hex = msg.content.split(' ')[1]
+    if (hex == '' || !hex) {
+      msg.channel.send('No hex color code provided.')
+      return
+    }
+    if (hex.toLowerCase() == 'random') {
+      hex = h.randomColor()
+    }
     const code = helper.remove_backticks(msg.content.substr(hex.length + 10))
     if (helper.check_hex(hex)) {
       const rgb = helper.hex_to_rgb(hex)
@@ -381,6 +389,13 @@ client.on('message', function (msg) {
 
           msg.channel.send(embed)
         })
+    }
+  } else if (msg.content.startsWith(`${prefix}randomcap`)) {
+    const text = msg.content.substr(12)
+    if (text == '') {
+      msg.channel.send('No text provided.')
+    } else {
+      msg.channel.send(helper.rand_cap(text))
     }
   } else {
     if (msg.content.startsWith(prefix)) {

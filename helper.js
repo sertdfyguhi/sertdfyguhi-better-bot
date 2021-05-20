@@ -36,6 +36,18 @@ function text_to_ascii(text, cb) {
   })
 }
 
+function rand_cap(string) {
+  let res = ''
+  for (const char of string.toLowerCase()) {
+    if (Math.round(Math.random()) == 0) {
+      res += char.toUpperCase()
+    } else {
+      res += char
+    }
+  }
+  return res
+}
+
 function create_color_img(color) {
   const canvas = createCanvas(1000, 1000)
   const context = canvas.getContext('2d')
@@ -126,5 +138,6 @@ module.exports = {
   create_color_img: create_color_img,
   hex_to_rgb: hex_to_rgb,
   check_hex: check_hex,
-  get_carbon: get_carbon
+  get_carbon: get_carbon,
+  rand_cap: rand_cap
 }
