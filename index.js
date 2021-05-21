@@ -18,7 +18,7 @@ client.on('ready', function() {
 
 client.on('message', function (msg) {
   if (msg.author.bot) return;
-  
+
   if (msg.content.startsWith(`${prefix}json`)) {
     // json and jsons command
     if (msg.content.startsWith(`${prefix}jsons`))  {
@@ -53,7 +53,7 @@ client.on('message', function (msg) {
     const embed = new discord.MessageEmbed()
       .setColor('RANDOM')
       .setTitle('Help')
-      .setDescription('Prefix: `' + prefix + '`')
+      .setDescription(`Prefix: \`${prefix}\``)
       .addField(
         '**Commands**',
         '`s!help`: shows all commands.\
@@ -72,7 +72,8 @@ client.on('message', function (msg) {
         \n`s!serverinfo`: info of server.\
         \n`s!color {hex color code}`: get the color of a hex color code.\
         \n`s!carbon {hex color code / RANDOM} {code}`: a carbon.now.sh code image.\
-        \n`s!randomcap {text}`: randomly capitalizes text.'
+        \n`s!randomcap {text}`: randomly capitalizes text.\
+        \n`s!japan`: random r/japanpics photo.'
       )
       .addField(
         '**Repo**',
@@ -175,15 +176,14 @@ client.on('message', function (msg) {
     try {
       lang_lower = split[1].toLowerCase()
     } catch (e) {
-      msg.channel.send('nothing provided')
+      msg.channel.send('Nothing provided')
       return
     }
 
     if (lang_lower.includes('\n')) {
       split.splice(2, 0, lang_lower.substring(lang_lower.indexOf('\n') + 1))
       split[1] = split[1].replace(
-        lang_lower.substring(lang_lower.indexOf('\n') - 1),
-        ''
+        lang_lower.substring(lang_lower.indexOf('\n') - 1),''
       )
       lang_lower = lang_lower.substr(0, lang_lower.indexOf('\n'))
     }
@@ -267,7 +267,8 @@ client.on('message', function (msg) {
       })
   } else if (msg.content == `${prefix}earth`) {
     // earth command
-    rp('earthporn').then(url => {
+    rp('earthporn')
+      .then(url => {
       const embed = new discord.MessageEmbed()
         .setImage(url)
         .setColor('#34c6eb')
@@ -397,6 +398,15 @@ client.on('message', function (msg) {
     } else {
       msg.channel.send(helper.rand_cap(text))
     }
+  } else if (msg.content == `${prefix}japan`) {
+    rp('japanpics')
+      .then(url => {
+        const embed = new discord.MessageEmbed()
+          .setImage(url)
+          .setColor('#add8e6')
+      
+        msg.channel.send(embed)
+      })
   } else {
     if (msg.content.startsWith(prefix)) {
       msg.channel.send('Invalid command.')
