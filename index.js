@@ -315,7 +315,7 @@ client.on('message', function (msg) {
         .addField('Discord ID', user.id, true)
         .addField('Joined at', member.joinedAt.toDateString(), true)
         .addField('Created at', user.createdAt.toDateString(), true)
-        .addField('Nickname', msg.member.nickname || 'No nickname', true)
+        .addField('Nickname', member.nickname || 'No nickname', true)
         .setColor('RANDOM')
         .setThumbnail(user.displayAvatarURL({ dynamic: true }))
         
