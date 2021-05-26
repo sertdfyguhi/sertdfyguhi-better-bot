@@ -407,9 +407,6 @@ client.on('message', function (msg) {
         try {
           if (data.error || data.data.children == false) {
             msg.channel.send('Subreddit not found.')
-          } else {
-            const message = helper.create_post_emb(data)
-            msg.channel.send(message)
           }
         } catch (e) {
           const message = helper.create_post_emb(data)
