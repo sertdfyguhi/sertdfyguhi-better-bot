@@ -19,6 +19,36 @@ async function get_carbon(code, rgb) {
   return res
 }
 
+async function get_reddit_post(sub) {
+  const res = await fetch(`https://www.reddit.com/r/${sub}/random.json`)
+  return res
+}
+
+function create_post_emb(data) {
+  const title = data[0].data.children[0].data.title
+  const desc = data[0].data.children[0].data.selftext
+  const permalink = data[0].data.children[0].data.permalink
+  const author = data[0].data.children[0].data.author
+  const url = 'https://reddit.com' + permalink
+  const image = data[0].data.children[0].data.url_overridden_by_dest
+  const embed = new discord.MessageEmbed()
+    .setTitle(title)
+    .setDescription(desc)
+    .setURL(url)
+    .setAuthor(author)
+    .setColor('RANDOM')
+
+  if (image && image.includes('redd')) {
+    embed.setImage(image)
+  }
+
+  if (data[0].data.children[0].data.over_18) {
+    return 'NSFW post, try something else.'
+  }
+
+  return embed
+}
+
 function hex_to_rgb(color) {
   var res = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color);
   return [parseInt(res[1], 16),
@@ -139,5 +169,7 @@ module.exports = {
   hex_to_rgb: hex_to_rgb,
   check_hex: check_hex,
   get_carbon: get_carbon,
-  rand_cap: rand_cap
+  rand_cap: rand_cap,
+  get_reddit_post: get_reddit_post,
+  create_post_emb: create_post_emb
 }

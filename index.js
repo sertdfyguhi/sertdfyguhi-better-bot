@@ -7,6 +7,7 @@ const helper = require('./helper')
 const run = require('./run')
 const github = require('./github')
 const keepalive = require('./keepalive')
+const help = require('./help.json')
 
 const client = new discord.Client()
 
@@ -47,36 +48,27 @@ client.on('message', function (msg) {
       let content = helper.remove_backticks(msg.content.substr(7))
       msg.channel.send(helper.json_embed(content))
     }
-  } else if (msg.content == `${prefix}help`) {
+  } else if (msg.content.startsWith(`${prefix}help`)) {
     // help command
+    const page = msg.content.split(' ')[1]
 
+    if (!page || page > help.pages.length) {
+      msg.channel.send(`Use \`s!help {page number: 1 to ${help.pages.length}}\` for commands.`)
+      return
+    }
+
+    const page_num = parseInt(page)
+    
     const embed = new discord.MessageEmbed()
       .setColor('RANDOM')
       .setTitle('Help')
       .setDescription(`Prefix: \`${prefix}\``)
       .addField(
-        '**Commands**',
-        '`s!help`: shows all commands.\
-        \n`s!code {lang} {code}`: executes code.\
-        \n`s!langs`: all programming languages that is valid.\
-        \n`s!user {github user}`: info about a github account.\
-        \n`s!repo {github user} {repo}`: info abount a github repo.\
-        \n`s!json {json}`: json reprensentation in embed.\
-        \n`s!jsons {array of jsons}`: json reprensentation in embed.\
-        \n`s!shibe`: sends a picture of a shibe.\
-        \n`s!cat`: sends a picture of a cat.\
-        \n`s!earth`: random picture from r/earthporn\
-        \n`s!randomcolor`: random color in embed.\
-        \n`s!asciiart {text}`: convert text into ascii art.\
-        \n`s!userinfo {mention}`: info of mention.\
-        \n`s!serverinfo`: info of server.\
-        \n`s!color {hex color code}`: get the color of a hex color code.\
-        \n`s!carbon {hex color code / RANDOM} {code}`: a carbon.now.sh code image.\
-        \n`s!randomcap {text}`: randomly capitalizes text.\
-        \n`s!japan`: random r/japanpics photo.'
+        'Commands',
+        help.pages[page_num - 1].join('\n')
       )
       .addField(
-        '**Repo**',
+        'Repo',
         'https://github.com/sertdfyguhi/sertdfyguhi-better-bot'
       )
       .addField(
@@ -406,6 +398,23 @@ client.on('message', function (msg) {
           .setColor('#add8e6')
       
         msg.channel.send(embed)
+      })
+  } else if (msg.content.startsWith(`${prefix}subreddit`)) {
+    const sub = msg.content.split(' ')[1]
+    helper.get_reddit_post(sub)
+      .then(res => res.json())
+      .then(data => {
+        try {
+          if (data.error || data.data.children == false) {
+            msg.channel.send('Subreddit not found.')
+          } else {
+            const message = helper.create_post_emb(data)
+            msg.channel.send(message)
+          }
+        } catch (e) {
+          const message = helper.create_post_emb(data)
+          msg.channel.send(message)
+        }
       })
   } else {
     if (msg.content.startsWith(prefix)) {

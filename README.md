@@ -6,4 +6,4 @@ Invite: https://discord.com/oauth2/authorize?client_id=826414044448555049&permis
 Todo:
 - [ ] rps command
 - [ ] rewrite command handling
-- [ ] subreddit command
+- [x] subreddit command

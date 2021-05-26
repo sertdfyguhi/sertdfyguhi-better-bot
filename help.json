@@ -1,0 +1,29 @@
+{
+  "pages": [
+    [
+      "`s!help {page number}`: shows all commands.",
+      "`s!code {lang} {code}`: executes code.",
+      "`s!langs`: all programming languages that is valid.",
+      "`s!user {github user}`: info about a github account.",
+      "`s!repo {github user} {repo}`: info abount a github repo.",
+      "`s!json {json}`: json reprensentation in embed.",
+      "`s!jsons {array of jsons}`: json reprensentation in embed."
+    ],
+    [
+      "`s!shibe`: sends a picture of a shibe.",
+      "`s!cat`: sends a picture of a cat.",
+      "`s!earth`: random picture from r/earthporn",
+      "`s!randomcolor`: random color in embed.",
+      "`s!asciiart {text}`: convert text into ascii art.",
+      "`s!userinfo {mention}`: info of mention.",
+      "`s!serverinfo`: info of server.",
+      "`s!color {hex color code}`: get the color of a hex color code."
+    ],
+    [
+      "`s!carbon {hex color code / RANDOM} {code}`: a carbon.now.sh code image.",
+      "`s!randomcap {text}`: randomly capitalizes text.",
+      "`s!japan`: random r/japanpics photo.",
+      "`s!subreddit {subreddit}`: random post from subreddit."
+    ]
+  ]
+}
