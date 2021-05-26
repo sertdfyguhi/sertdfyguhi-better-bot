@@ -52,7 +52,7 @@ client.on('message', function (msg) {
     // help command
     const page = msg.content.split(' ')[1]
 
-    if (!page || page > help.pages.length) {
+    if (!page || isNaN(page) || page > help.pages.length) {
       msg.channel.send(`Use \`s!help {page number: 1 to ${help.pages.length}}\` for commands.`)
       return
     }
