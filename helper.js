@@ -82,6 +82,7 @@ function create_color_img(color) {
   const canvas = createCanvas(1000, 1000)
   const context = canvas.getContext('2d')
 
+  if (!color.startsWith('#')) color = '#' + color
   context.fillStyle = color
   context.fillRect(0, 0, 1000, 1000)
 
@@ -89,6 +90,7 @@ function create_color_img(color) {
 }
 
 function check_hex(color) {
+  if (!color.startsWith('#')) color = '#' + color
   return /^#[0-9A-F]{6}$/i.test(color)
 }
 

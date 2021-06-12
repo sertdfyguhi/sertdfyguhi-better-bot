@@ -346,10 +346,13 @@ client.on('message', function (msg) {
     if (helper.check_hex(color)) {
       const buffer = helper.create_color_img(color).toBuffer('image/png')
       const attachment = new discord.MessageAttachment(buffer, 'color.png')
+      let title_c = color
+      if (!color.startsWith('#')) title_c = '#' + color
 
       const embed = new discord.MessageEmbed()
         .attachFiles(attachment)
-        .setTitle('Color `' + color + '`')
+        .setTitle(`Color \`${title_c}\``)
+        .addField('RGB', `\`${helper.hex_to_rgb(color).join(', ')}\``)
         .setColor(color)
         .setImage('attachment://color.png')
 
