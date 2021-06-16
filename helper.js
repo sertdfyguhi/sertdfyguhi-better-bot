@@ -86,7 +86,7 @@ function create_color_img(color) {
   context.fillStyle = color
   context.fillRect(0, 0, 1000, 1000)
 
-  return canvas
+  return canvas.toBuffer('image/png')
 }
 
 function check_hex(color) {

@@ -21,7 +21,7 @@ const langs = [
 async function python(code) {
   const res = await f('https://wandbox.org/api/compile.json', {
     method: 'POST',
-    body: JSON.stringify({ code: code, save: true, compiler: 'cpython-head' }),
+    body: JSON.stringify({ code: code, save: true, compiler: 'cpython-3.8.0' }),
   })
 
   return res

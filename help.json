@@ -23,7 +23,8 @@
       "`s!carbon {hex color code / RANDOM} {code}`: a carbon.now.sh code image.",
       "`s!randomcap {text}`: randomly capitalizes text.",
       "`s!japan`: random r/japanpics photo.",
-      "`s!subreddit {subreddit}`: random post from subreddit."
+      "`s!subreddit {subreddit}`: random post from subreddit.",
+      "`s!vigenere {type (encode, decode)} {key} {data}`: decode/encode using a vigenere cipher."
     ]
   ]
 }

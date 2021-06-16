@@ -1,6 +1,7 @@
 const discord = require('discord.js')
 const rp = require('random-puppy')
 const h = require('hgdfhjvysger')
+const vignere = require('vigenere')
 
 const prefix = 's!'
 const helper = require('./helper')
@@ -275,7 +276,8 @@ client.on('message', function (msg) {
     const embed = new discord.MessageEmbed()
       .attachFiles(attachment)
       .setTitle('This is your random color.')
-      .setDescription('`' + color + '`')
+      .addField('Hex', `\`${color}\``)
+      .addField('RGB', `\`${helper.hex_to_rgb(color).join(' ')}\``)
       .setColor(color)
       .setImage('attachment://color.png')
 
@@ -344,7 +346,7 @@ client.on('message', function (msg) {
   } else if (msg.content.startsWith(`${prefix}color`)) {
     const color = msg.content.split(' ')[1]
     if (helper.check_hex(color)) {
-      const buffer = helper.create_color_img(color).toBuffer('image/png')
+      const buffer = helper.create_color_img(color)
       const attachment = new discord.MessageAttachment(buffer, 'color.png')
       let title_c = color
       if (!color.startsWith('#')) title_c = '#' + color
@@ -352,7 +354,7 @@ client.on('message', function (msg) {
       const embed = new discord.MessageEmbed()
         .attachFiles(attachment)
         .setTitle(`Color \`${title_c}\``)
-        .addField('RGB', `\`${helper.hex_to_rgb(color).join(', ')}\``)
+        .addField('RGB', `\`${helper.hex_to_rgb(color).join(' ')}\``)
         .setColor(color)
         .setImage('attachment://color.png')
 
@@ -416,6 +418,32 @@ client.on('message', function (msg) {
           msg.channel.send(message)
         }
       })
+  } else if (msg.content.startsWith(`${prefix}vigenere`)) {
+    const type = msg.content.split(' ')[1]
+    const key = msg.content.split(' ')[2]
+    const data = helper.remove_backticks(msg.content.substr(key.length + 16 + 3))
+
+    if (!key) {
+      msg.channel.send('No key and data provided.')
+      return
+    }
+
+    if (data == '') {
+      msg.channel.send('No data provided.')
+      return
+    }
+    switch (type) {
+      case 'encode':
+        msg.channel.send(`\`\`\`${vignere.encode(data, key)}\`\`\``)
+        break
+
+      case 'decode':
+        msg.channel.send(`\`\`\`${vignere.decode(data, key)}\`\`\``)
+        break
+
+      default:
+        msg.channel.send('Invalid type (encode, decode).')
+    }
   } else {
     if (msg.content.startsWith(prefix)) {
       msg.channel.send('Invalid command.')
